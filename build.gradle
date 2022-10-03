@@ -40,7 +40,7 @@ task genJaxb {
                     classpath: configurations.jaxb.asPath
             mkdir(dir: sourcesDir)
 
-            xjc(destdir: sourcesDir, schema: schema) {
+            xjc(destdir: sourcesDir, schema: schema, package: "com.example.serverone") {
                 arg(value: "-wsdl")
                 produces(dir: sourcesDir, includes: "**/*.java")
             }
@@ -52,7 +52,6 @@ compileJava.dependsOn genJaxb
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'com.aerospike:spring-data-aerospike:3.4.1'
     implementation 'wsdl4j:wsdl4j'
@@ -63,6 +62,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 }
 
 tasks.named('test') {
