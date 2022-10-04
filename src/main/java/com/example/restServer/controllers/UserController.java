@@ -17,23 +17,32 @@ public class UserController {
     }
 
     @GetMapping("/getUser/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable int id) {
+    public ResponseEntity<Object> getUser(@PathVariable int id) {
         UserDTO retrievedUser = userService.getUser(id);
+        if (retrievedUser.getName().equals("non-existing user")) {
+            return new ResponseEntity<>("non-existing user", HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(retrievedUser, HttpStatus.OK);
     }
+
     @PostMapping("/add")
-    public ResponseEntity<Object> addUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<Object> addUser(@RequestBody UserDTO userDTO) {
         String addingMessage = userService.addUser(userDTO);
-        return new ResponseEntity<>(addingMessage,HttpStatus.CREATED);
+        if (addingMessage.contains("added successfully")) {
+            return new ResponseEntity<>(addingMessage, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Failing adding : " + addingMessage, HttpStatus.BAD_REQUEST);
     }
+
     @PutMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
+
     @DeleteMapping("delete")
-    public ResponseEntity<Object> deleteUser(@RequestParam int id){
+    public ResponseEntity<Object> deleteUser(@RequestParam int id) {
         String deletingMessage = userService.deleteUser(id);
-        return new ResponseEntity<>(deletingMessage,HttpStatus.OK);
+        return new ResponseEntity<>(deletingMessage, HttpStatus.OK);
     }
 }
